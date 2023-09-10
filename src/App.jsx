@@ -47,7 +47,9 @@ function App() {
 
   return (
     <>
-    
+    <div className="NavBar">
+      <h1></h1>
+    </div>
     <div className="Form">
     <Form  onSubmit={handleSubmit}>
             <h2> ADD USER </h2>

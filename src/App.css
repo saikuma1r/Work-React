@@ -3,14 +3,16 @@ body{
 }
 .Form{
   height: auto;
+  position: fixed;
+  top: 30px;
   width: 500px;
   text-align: center;
   margin-top:90px;
-  margin:300px ;
-  color: brown;
-  background-color: lightpink;
+  margin-left:550px ;
+  color: darkblue;
+  background-color: silver;
   border-radius: 10px;
-  border: 2px solid black;
+  border: 4px solid blue;
 }
 .list {
   text-align: center;
@@ -23,4 +25,19 @@ body{
 
 .list li {
   text-align: left;
+}
+.NavBar{
+  height: 740px;
+  width: 30px;
+  border-top-right-radius: 20px;
+  border: 3px solid blueviolet;
+  background-color: blue;
+}
+.NavBar:hover{
+  height: 740px;
+  width: 90px;
+  transition: 120ms;
+  border-top-right-radius: 40px;
+  border: 4px solid blue;
+  background-color: skyblue;
 }
