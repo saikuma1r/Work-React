@@ -1,66 +1,88 @@
-// import React from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import "./App.css";
-import { useState } from "react";
+import { firestore } from "./firebase";
+import { useState,useEffect } from "react";
 
 function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
+  const [data, setData] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(name, email, message);
+  
+
+    
+   firestore.collection("messages")
+    .add({
+      name,
+      email,
+      message})
+      .then(()=>{
+        setName(""),
+        setEmail(""),
+        setMessage("")
+      })
+      .catch((error)=>console.error("message",error));
   };
+  useEffect(() => {
+    // Get all the messages from Firestore
+    firestore
+      .collection("messages")
+      .get()
+      .then((snapshot) => {
+        setData(snapshot.docs.map((doc) => ({
+          name: doc.data().name,
+          email: doc.data().email,
+          message: doc.data().message,
+        })));
+      });
+  }, []);
+  
 
   return (
     <>
-      <Container
-        fluid
-        className="d-flex justify-content-center align-items-center h-100 w-100"
-      >
-        <div className="border rounded p-4 shadow-sm container">
-          <Form className="d-flex flex-column" onSubmit={handleSubmit}>
-            <h2 className="mb-4 font-weight-bold">Contact Us 🤙🏽</h2>
-            <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>Message</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Your message here!"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </Form.Group>
+    <div className="Form">
+    <Form  onSubmit={handleSubmit}>
+            <h2> ADD USER </h2>
+            <label>Name</label>
+            <br></br>
+              <input type="text" placeholder="Name" value={name} onChange={(e)=>setName(e.target.value)}>
+              </input>
+              <br></br>
+      
+              <label>Username</label>
+              <br></br>
+              <input type="text" placeholder="Username" value={email} onChange={(e)=>setEmail(e.target.value)}>
+              </input>
+              <br></br>
+              <label>Email</label>
+              <br></br>
+              <input type="email" placeholder="Email" value={message} onChange={(e)=>setMessage(e.target.value)}>
+              </input>
+              <br></br>
+            
+              
             <Button variant="primary" type="submit">
               Submit
             </Button>
           </Form>
-        </div>
-      </Container>
+          <center class="list">
+          <ul >
+            {data.map((message) => (
+              <li key={message.name}>{message.name} - {message.email} - {message.message}</li>
+            ))}
+          </ul>
+      
+          </center>
+          
+    </div>
+        
+      
     </>
   );
 }
